@@ -1,0 +1,17 @@
+{
+  "name": "meownd",
+  "version": "1.0.0",
+  "description": "This project uses the CatAPI to dynamically generate cat images and facts by breed.",
+  "main": "backend.js",
+  "scripts": {
+    "test": "None specified"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

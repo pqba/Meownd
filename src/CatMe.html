@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cat Me!</title>
+        <script src="frontend.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <!--Montserrat font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet">
+    </head>
+
+    <body>
+        <h1>A Catty Corner</h1>
+        <p>What to make of them?</p>
+        <p><a href="https://en.wikipedia.org/wiki/Cat">Learn about felines</a></p>
+        <hr>
+        <form action="">
+            <label for="amount">Amount of Cats: </label><br>
+            <input type="text" id="amount" name="amount" required><br>
+            <label for="breed">Cat Breed: </label><br>
+            <input type="text" id="breed" name="breed" required><br>
+            <button id="fetch-button" type="submit">Click ME</button>
+        </form>
+        <div id="meow"></div>
+    </body>
+</html>
