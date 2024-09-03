@@ -1,5 +1,4 @@
-const validBreeds = ['java', 'nebe', 'bali', 'lihu', 'sing', 'tang', 'cymr', 'rblu', 'birm', 'tonk', 'bamb', 'bsho', 'tvan', 'kora', 'chau', 'emau', 'toyg', 'char', 'siam', 'chee', 'lape', 'amau', 'mcoo', 'mala', 'aege', 'csho', 'pers', 'sfol', 'bure', 'manx', 'amis', 'buri', 'orie', 'sphy', 'ebur', 'sibe', 'kuri', 'ctif', 'beng', 'cspa', 'pixi', 'ragd', 'acur', 'hbro', 'norw', 'esho', 'bslo', 'abys', 'hima', 'raga', 'ocic', 'asho', 'srex', 'soma', 'cypr', 'sava', 'snow', 'awir', 'munc', 'drex', 'jbob', 'dons', 'bomb', 'crex', 'khao', 'ycho', 'abob'];
-
+import universal_values from './constants';
 
 document.addEventListener("DOMContentLoaded", (event) => {
     const button = document.getElementById('fetch-button'); 
@@ -13,7 +12,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 // Ensure limit_amount is between (1,100) and breed_name exists.
 function validateForm(limit_amount, breed_name) {
-    return (limit_amount > 0 && limit_amount <= 100) && (breed_name in validBreeds);
+    return (limit_amount > 0 && limit_amount <= 100) && (breed_name in universal_values.breed_list);
 }
 
 // Renders json data from backend into html pages, looping element by element and adding the generated story.

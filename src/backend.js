@@ -5,6 +5,8 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const gemini = new GoogleGenerativeAI(process.env.GENAI_KEY).getGenerativeModel({ model: "gemini-1.5-flash" });
 
+import universal_values from './constants';
+
 const app = express();
 const PORT = 3000;
 const API_KEY = process.env.CAT_API;
@@ -12,7 +14,7 @@ const API_KEY = process.env.CAT_API;
 
 app.use(cors()); // Use CORS middleware, '*' for now
 
-const validBreeds = ['java', 'nebe', 'bali', 'lihu', 'sing', 'tang', 'cymr', 'rblu', 'birm', 'tonk', 'bamb', 'bsho', 'tvan', 'kora', 'chau', 'emau', 'toyg', 'char', 'siam', 'chee', 'lape', 'amau', 'mcoo', 'mala', 'aege', 'csho', 'pers', 'sfol', 'bure', 'manx', 'amis', 'buri', 'orie', 'sphy', 'ebur', 'sibe', 'kuri', 'ctif', 'beng', 'cspa', 'pixi', 'ragd', 'acur', 'hbro', 'norw', 'esho', 'bslo', 'abys', 'hima', 'raga', 'ocic', 'asho', 'srex', 'soma', 'cypr', 'sava', 'snow', 'awir', 'munc', 'drex', 'jbob', 'dons', 'bomb', 'crex', 'khao', 'ycho', 'abob'];
+
 
 /* DOCS: https://developers.thecatapi.com/view-account/API_KEY (without live_) */
 app.get('/get-images', async (req, res) => {
@@ -46,7 +48,7 @@ app.listen(PORT, () => {
 });
 
 function validCall(user_limit, user_breed, want_breed) {
-  return (user_limit > 0 && user_limit <= 100) && (want_breed == 1 || want_breed == 0) && (user_breed in validBreeds);
+  return (user_limit > 0 && user_limit <= 100) && (want_breed == 1 || want_breed == 0) && (user_breed in universal_values.breed_list);
 }
 
 function formatCatAPI(resp_json) {
