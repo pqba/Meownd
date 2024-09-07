@@ -34,7 +34,7 @@ app.get('/get-images', async (req, res) => {
     // Get API response, form generative story.
     const response = await axios.get(apiUrl);
     const info = response.data;
-    //     data["_geministory"] = imagineStory(formatCatAPI(data),data["url"]);
+    // TODO: const story = imagineStory(formatCatAPI(data),data["url"]);
     const story = "Lorem ipsum";
 
     const data = {
