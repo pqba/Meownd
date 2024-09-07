@@ -2,6 +2,9 @@ body, html {
     background-color: var(--bg);
 }
 
+body {
+    margin-left: 0;
+}
 :root {
     --red: rgb(204, 107, 107);
     --contrast: #2a4d5b;
@@ -48,6 +51,7 @@ img.medium {
 .subtitle {
     margin-bottom: .3rem;
 }
+
 /*links*/
 a {
     color: var(--link);
@@ -60,7 +64,7 @@ a:hover {
     text-decoration: underline;
     font-weight:bold;
 }
-/*Header*/
+/*Header and mascot*/
 .header {
     padding-left:1rem;
 }
@@ -73,6 +77,16 @@ hr {
     color:var(--darkgray);
     margin:0;
     left:0;
+}
+img.mascot:hover {
+    animation: wiggle 2s infinite;
+}
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    80% { transform: rotate(0deg); }
+    85% { transform: rotate(5deg); }
+    90% { transform: rotate(-5deg); }
+   100% { transform: rotate(0deg); }
 }
 
 /*Form*/
@@ -149,12 +163,21 @@ hr {
     justify-content: center;
 }
 
-.cat img {
+.cat img.medium {
     border-color: var(--tp-bg);
-    width: 100%;
     height: auto;
     padding:.3rem;
     border-radius:5%;
+    /*center the image*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.cat img.small {
+    width:10%;
+    display:block;
+    margin-left:1rem;
 }
 .cat {
     border:solid;

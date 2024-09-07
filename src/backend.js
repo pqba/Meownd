@@ -29,7 +29,14 @@ app.get('/get-images', async (req, res) => {
     if (!validateCall(limit, breed_ids, has_breeds)) {
       throw new Error('Invalid API call parameters.');
     }
-    const apiUrl = `https://api.thecatapi.com/v1/images/search?api_key=${API_KEY}&limit=${limit}&breed_ids=${breed_ids}&has_breeds=${has_breeds}`
+    let breed = breed_ids;
+
+    // Remove 'any' from request
+    if(breed === "any"){
+      breed = "";
+    }
+
+    const apiUrl = `https://api.thecatapi.com/v1/images/search?api_key=${API_KEY}&limit=${limit}&breed_ids=${breed}&has_breeds=${has_breeds}`
 
     // Get API response, form generative story.
     const response = await axios.get(apiUrl);

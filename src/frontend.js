@@ -50,20 +50,27 @@ function renderError(e) {
     document.getElementById('error').textContent = e;
 }
 // Renders json data from backend into html pages, looping element by element and adding the generated story.
-function renderOnPage(data) {
+function renderOnPage(data,oneBreed) {
     document.getElementById('meow').innerHTML = "";
     document.getElementById('imagine').textContent = "";
-    const catInfo = data.info;
-    const llmStory = data.story;
-    let content = '';
 
-    catInfo.forEach(element => {
+    // Send to alternate rendering function
+    if(oneBreed) {
+        renderOneCat(data);
+        return;
+    }
+
+    const catsInfo = data.info;
+    const llmStory = data.story;
+
+    catsInfo.forEach(element => {
         const cat = element.breeds[0];
         const breed = cat.name;
         const image_link = element.url;
         const desc = cat.description;
         const qualities = cat.temperament;
         const nation = cat.origin;
+        const country_id = cat.country_code;
         const wiki = cat.wikipedia_url;
         const lbs = cat.weight.imperial;
         const kgs = cat.weight.metric;
@@ -72,6 +79,7 @@ function renderOnPage(data) {
         // Create elements
         const itemDiv = document.createElement('div'); // Container for each cat
         const breedH3 = document.createElement('h3');
+        const nativeFlag = document.createElement('img');
         const catImage = document.createElement('img');
         const descParagraph = document.createElement('p');
         const qualitiesParagraph = document.createElement('p');
@@ -81,6 +89,8 @@ function renderOnPage(data) {
         itemDiv.classList.add('cat');
         breedH3.textContent = breed;
         breedH3.style.textAlign = "center";
+        nativeFlag.src = `https://flagsapi.com/${country_id}/flat/64.png`;
+        nativeFlag.alt = "";
         catImage.src = image_link;
         catImage.classList.add('medium'); // styling
         descParagraph.innerHTML = `${desc}<br>They are from <b>${nation}</b> and weigh between ${kgs} kgs (${lbs} lbs). The average life span is ${lifespan} years.`;
@@ -92,6 +102,7 @@ function renderOnPage(data) {
 
         // add to div
         itemDiv.appendChild(breedH3);
+        itemDiv.appendChild(nativeFlag);
         itemDiv.appendChild(catImage);
         itemDiv.appendChild(descParagraph);
         itemDiv.appendChild(qualitiesParagraph);
@@ -102,12 +113,22 @@ function renderOnPage(data) {
     document.getElementById("imagine").textContent = llmStory;
 }
 
+function renderOneCat(data) {
+    const cat = data.info;
+    const llmStory = data.story;
+    // TODO: finish render function.
+
+    document.getElementById("imagine").textContent = llmStory;
+}
+
 // Sends a request to server based on specified breed and amount of images wanted
 function getInfo(limit, breed) { 
+    // Determine if page should be rendered as one breed or has a mix
+    const isOneBreed = limit != "any";
     fetch(`http://localhost:${PORT}/get-images?limit=${limit}&breed_ids=${breed}&has_breeds=1`)
         .then(response => response.json())
         .then(data => {
-            renderOnPage(data);
+            renderOnPage(data,isOneBreed);
         })
         .catch(error => {
             console.error("Issue fetching cat images!");
