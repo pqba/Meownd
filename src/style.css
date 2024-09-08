@@ -163,6 +163,11 @@ img.mascot:hover {
     justify-content: center;
 }
 
+#feline-info {
+    width: 100%;
+    flex:auto;
+}
+
 .cat img.medium {
     border-color: var(--tp-bg);
     height: auto;

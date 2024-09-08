@@ -28,6 +28,9 @@ node .\src\backend.js
 ```
 - Open **CatMe.html** in a web browser on the same computer
 
+## In Development
+- Generate new stories, see them in real time through text prompt streaming
+
 
 ## License
 

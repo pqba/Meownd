@@ -114,17 +114,63 @@ function renderOnPage(data,oneBreed) {
 }
 
 function renderOneCat(data) {
-    const cat = data.info;
+    const sameCats = data.info;
     const llmStory = data.story;
-    // TODO: finish render function.
+    if(sameCats.length <= 0) return;
 
+    const firstCat = sameCats[0].breeds[0];
+    const firstDiv = document.createElement('div'); // Container for first cat
+    
+    const breedH3 = document.createElement('h3');
+    const nativeFlag = document.createElement('img');
+    const descParagraph = document.createElement('p');
+    const qualitiesParagraph = document.createElement('p');
+    const wikiLink = document.createElement('a');
+    firstDiv.classList.add('cat');
+    firstDiv.id = "feline-info";
+    
+    firstDiv.textContent = firstCat.name;
+    breedH3.style.textAlign = "center";
+    nativeFlag.src = `https://flagsapi.com/${firstCat.country_code}/flat/64.png`;
+    nativeFlag.alt = "";
+    descParagraph.innerHTML = `${firstCat.description}<br>They are from <b>${firstCat.origin}</b> and weigh between ${firstCat.weight.metric} kgs (${firstCat.weight.imperial} lbs). The average life span is ${firstCat.life_span} years.`;
+    descParagraph.classList.add('smaller-text');
+    qualitiesParagraph.classList.add('smaller-text');
+    qualitiesParagraph.innerHTML = `Qualities: <em>${firstCat.temperament}</em>`;
+    wikiLink.textContent = 'See Wikipedia';
+    wikiLink.href = firstCat.wikipedia_url;
+
+    firstDiv.appendChild(breedH3);
+    firstDiv.appendChild(nativeFlag);
+    firstDiv.appendChild(descParagraph);
+    firstDiv.appendChild(qualitiesParagraph);
+    firstDiv.appendChild(wikiLink);
+
+    document.getElementById("meow").appendChild(firstDiv);
+
+    sameCats.forEach(element => {
+        const image_link = element.url;
+        // Create elements
+        const itemDiv = document.createElement('div'); // Container for each cat
+        const catImage = document.createElement('img');
+
+        // content and attributes
+        itemDiv.classList.add('cat');
+        catImage.src = image_link;
+        catImage.classList.add('medium'); // styling
+     
+        // add images to div
+        itemDiv.appendChild(catImage);
+        document.getElementById("meow").appendChild(itemDiv);
+})
     document.getElementById("imagine").textContent = llmStory;
 }
 
 // Sends a request to server based on specified breed and amount of images wanted
 function getInfo(limit, breed) { 
     // Determine if page should be rendered as one breed or has a mix
-    const isOneBreed = limit == "any";
+    const isOneBreed = (breed != "any");
+    console.log('is1b: ',isOneBreed," breed: ",breed);
     fetch(`http://localhost:${PORT}/get-images?limit=${limit}&breed_ids=${breed}&has_breeds=1`)
         .then(response => response.json())
         .then(data => {

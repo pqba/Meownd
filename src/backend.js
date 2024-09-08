@@ -3,22 +3,28 @@ const axios = require('axios');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-const gemini = new GoogleGenerativeAI(process.env.GENAI_KEY).getGenerativeModel({ model: "gemini-1.5-flash" });
-
 const universal_values = require('./config.json');
+
+const { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory} = require("@google/generative-ai");
+const safetySettings = [ {
+category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH, }, {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH, },{
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH, }, {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH, } ];
+const gemini = new GoogleGenerativeAI(process.env.GENAI_KEY).getGenerativeModel({ model: "gemini-1.5-flash" , safetySettings:safetySettings});
 
 const app = express();
 const PORT = 3000;
 const API_KEY = process.env.CAT_API;
 
-
 app.use(cors()); // Use CORS middleware, '*' for now
 
 /* CAT API Docs: https://developers.thecatapi.com/view-account/API_KEY 
-   Gemini Docs: https://ai.google.dev/gemini-api/docs/quickstart?lang=node
-*/
+   Gemini Docs: https://ai.google.dev/gemini-api/docs/quickstart?lang=node */
 
 // Request from this route 
 app.get('/get-images', async (req, res) => {
@@ -110,10 +116,11 @@ function fileEncode(hyperlink, mimeType) {
 
 async function imagineStory(formattedText, image_url) {
   try {
-    const prompt = `You are a story weaver for a web visitor on a cat facts website who creates paragraph length quirky short stories based on content in the image and any relevant background information on the cat in question. Here is the information can draw from: ${formattedText}. Make your story imaginative, around 1 paragraph, and incorporate anything unique in the image or previous descriptoin you recieved.`;
+    const prompt = `You are a story weaver for children who writes paragraph length short stories based on content in the image and text description of a cat. Here is the information you can draw from: ${formattedText}. Make your story clean and incorporate anything unique from what you recieved.`;
     // const imageData = await fileEncode(image_url,"image/jpeg");
     // TODO: allow sending of image types.
     const story = await gemini.generateContent(prompt);
+    console.log(`STORY: ${JSON.stringify(story,null,2)}`);
     return story.response.text();
   }
   catch (error) {
