@@ -2,6 +2,8 @@
 
 This project uses the [CatAPI](https://thecatapi.com) to dynamically generate cat images and facts by breed along with stories created by Gemini's multimodal AI.
 
+<img src="media/vector_cat.svg" height="50" title="Meownd's Mascot" alt="">
+
 ## Technologies
 
 - NodeJS (express, axios, cors)
