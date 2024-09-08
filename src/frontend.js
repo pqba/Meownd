@@ -176,14 +176,13 @@ function renderOneCat(data) {
 function getInfo(limit, breed) { 
     // Determine if page should be rendered as one breed or has a mix
     const isOneBreed = (breed != "any");
-    console.log('is1b: ',isOneBreed," breed: ",breed);
     fetch(`http://localhost:${PORT}/get-images?limit=${limit}&breed_ids=${breed}&has_breeds=1`)
         .then(response => response.json())
         .then(data => {
             renderOnPage(data,isOneBreed);
         })
         .catch(error => {
-            console.error("Issue fetching cat images!");
+            console.error("Issue fetching cat images!",error);
         });
 }
 

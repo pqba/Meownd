@@ -102,28 +102,46 @@ function describeData(data) {
   Weight (kgs): ${animal.weight.metric}`;
 }
 async function imageToBase64(hyperlink) {
-  let img = await axios.get(hyperlink,{responseType:'arraybuffer'});
-  return Buffer.from(img.data).toString('base64');
+  try {
+    const response = await axios.get(hyperlink, { responseType: 'arraybuffer' });
+    // Check response status for errors
+    if (response.status !== 200) {
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+
+    const mimeType = response.headers['content-type'];
+    // Ensure it's an image type
+    if (!mimeType.startsWith('image/')) {
+      throw new Error('Invalid image format. Only image types are supported.');
+    }
+    return Buffer.from(response.data).toString('base64');
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    return ''; 
+  }
 }
-function fileEncode(hyperlink, mimeType) {
-  return {
-    inlineData: {
-      data: imageToBase64(hyperlink),
-      mimeType,
-    },
-  };
+async function fileEncode(hyperlink, mimeType) {
+  const encodedString = await imageToBase64(hyperlink);
+  if(encodedString.length > 0){
+    return {
+      inlineData: {
+        data: encodedString,
+        mimeType,
+      },
+    };
+  }
+  return {};
 }
 
 async function imagineStory(formattedText, image_url) {
   try {
     const prompt = `You are a story weaver for children who writes paragraph length short stories based on content in the image and text description of a cat. Here is the information you can draw from: ${formattedText}. Make your story clean and incorporate anything unique from what you recieved.`;
-    // const imageData = await fileEncode(image_url,"image/jpeg");
-    // TODO: allow sending of image types.
-    const story = await gemini.generateContent(prompt);
+    const imagePart = await fileEncode(image_url,"image/jpeg");
+    const story = await gemini.generateContent([prompt,imagePart]);
     return story.response.text();
   }
   catch (error) {
-    console.log("Google GenAI error: ", error);
+    console.log("Error during generation: ", error);
     return "Couldn't generate story.";
   }
 }
