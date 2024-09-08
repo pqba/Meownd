@@ -1,5 +1,8 @@
+/* Entire page */
 body, html {
     background-color: var(--bg);
+    scrollbar-color: var(--alt-bg) var(--lightgreen);
+    scrollbar-width: thin;
 }
 
 body {
@@ -13,16 +16,15 @@ body {
     --alt-bg: #e1e4de;
     --secondary: #c6a9c8;
     --darkgreen:#1e4b32;
+    --lightgreen: #739a85;
     --yellow: rgb(246, 246, 147);
     --lightgreen: rgb(177, 219, 177);
     --darkgray: rgb(49, 49, 49);
     --submit: #d3b7d2;
     --link:  rgb(53, 123, 146);
 
-
     box-sizing: border-box;
     font-family: "Montserrat", monospace;
-
 }
 
 *,
@@ -100,7 +102,6 @@ img.mascot:hover {
     color:var(--darkgreen);
 }
 /*Form*/
-
 .form-container {
     display: flex;
     justify-content: center;
@@ -160,13 +161,12 @@ img.mascot:hover {
 }
 
 /*Error*/
-
 #error {
     color:var(--red);
     text-align: center;
     font-size:90%;
 }
-/*Meow*/
+/*Meow (Dynamic Content) */
 #meow {
     display:flex;
     flex-wrap: wrap;
@@ -201,16 +201,17 @@ img.mascot:hover {
     border-width: .2rem;
     padding-left: .3rem;
     padding-right:.3rem;
-    flex: 0 0 calc(32%); /* Adjust column width and spacing */
+    flex: 0 0 calc(32%); 
     margin-top:.5rem;
     margin-left:.2rem;
     margin-right:.2rem;
     margin-bottom:.5rem;
     position: relative;
 }
-
-/*Imagine*/
+/*LLM Story*/
 .imagine {
     margin-left: 2rem;
     padding:1rem;
+    font-style: italic;
+    font-weight: 500;
 }
