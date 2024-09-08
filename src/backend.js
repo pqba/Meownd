@@ -120,7 +120,6 @@ async function imagineStory(formattedText, image_url) {
     // const imageData = await fileEncode(image_url,"image/jpeg");
     // TODO: allow sending of image types.
     const story = await gemini.generateContent(prompt);
-    console.log(`STORY: ${JSON.stringify(story,null,2)}`);
     return story.response.text();
   }
   catch (error) {

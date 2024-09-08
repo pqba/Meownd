@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const button = document.getElementById('fetch-button'); 
     button.addEventListener('click', (event) => {
         event.preventDefault(); // Prevent the form from auto submit
+        renderWaitPage();
+
         const limit = sanitize(document.getElementById('amount').value); 
         const breed = sanitize(document.getElementById('breed').value); 
 
@@ -44,7 +46,10 @@ function validateForm(limit_amount, breed_name) {
     if(!digitRegex.test(limit_amount) || typeof breed_name != "string") return false;
     return (parseInt(limit_amount) > 0 && parseInt(limit_amount) <= 100) && (universal_values.breeds.includes(breed_name));
 }
-
+// Animate mascot until div is loaded
+function renderWaitPage() {
+   document.getElementById('mascot').classList.add('spin');
+}
 // Renders the message 'e' in meow div on incorrect form submission
 function renderError(e) {
     document.getElementById('error').textContent = e;
@@ -111,6 +116,7 @@ function renderOnPage(data,oneBreed) {
         document.getElementById("meow").appendChild(itemDiv);
 })
     document.getElementById("imagine").textContent = llmStory;
+    document.getElementById('mascot').classList.remove('spin'); // end animation
 }
 
 function renderOneCat(data) {

@@ -12,6 +12,7 @@ body {
     --tp-bg:#f3f7f0db;
     --alt-bg: #e1e4de;
     --secondary: #c6a9c8;
+    --darkgreen:#1e4b32;
     --yellow: rgb(246, 246, 147);
     --lightgreen: rgb(177, 219, 177);
     --darkgray: rgb(49, 49, 49);
@@ -78,6 +79,9 @@ hr {
     margin:0;
     left:0;
 }
+img#mascot.spin {
+    animation: spin 2s infinite;
+}
 img.mascot:hover {
     animation: wiggle 2s infinite;
 }
@@ -88,7 +92,13 @@ img.mascot:hover {
     90% { transform: rotate(-5deg); }
    100% { transform: rotate(0deg); }
 }
-
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.page-title {
+    color:var(--darkgreen);
+}
 /*Form*/
 
 .form-container {

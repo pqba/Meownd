@@ -13,24 +13,21 @@ This project uses the [CatAPI](https://thecatapi.com) to dynamically generate ca
 
 - Install [nodeJS](https://nodejs.org/en/download/prebuilt-installer/current)
 - Acquire required packages found in **package.json** with  `npm install {pkg}`
-- [Get an API key](https://thecatapi.com/signup) from CatAPI
+- Get API keys from [CatAPI](https://thecatapi.com/signup) and [GoogleAIStudio](https://aistudio.google.com/app/apikey)
+    - Reccomendation: use [`Gemini 1.5 Flash`](https://ai.google.dev/gemini-api/docs/models/gemini#gemini-1.5-flash) which is free and multimodal for 15 requests per minute
 - Execute backend
 
-**Mac & Linux**
-```bash
-CAT_API={key} GENAI_KEY={key} node src/backend.js
-```
-**Windows**
-```bash
-$env:CAT_API={key}
-$env:GENAI_KEY={key}
-node .\src\backend.js
-```
+    **Mac & Linux**
+    ```bash
+    CAT_API={key} GENAI_KEY={key} node src/backend.js
+    ```
+    **Windows**
+    ```bash
+    $env:CAT_API={key}
+    $env:GENAI_KEY={key}
+    node .\src\backend.js
+    ```
 - Open **CatMe.html** in a web browser on the same computer
-
-## In Development
-- Generate new stories, see them in real time through text prompt streaming
-
 
 ## License
 
