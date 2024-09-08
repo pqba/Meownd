@@ -41,13 +41,13 @@ app.get('/get-images', async (req, res) => {
     const apiUrl = `https://api.thecatapi.com/v1/images/search?api_key=${API_KEY}&limit=${limit}&breed_ids=${breed}&has_breeds=${has_breeds}`
 
     // Get API response, form generative story.
-    const { response } = await axios.get(apiUrl);
-    if(!response) {
+    const  response  = await axios.get(apiUrl);
+    const info = response.data;
+    if(!info) {
       throw new Error('Empty response from Cat API');
     }
-    const info = response.data;
+    const story = await imagineStory(describeData(info),info[0].url);
 
-   const story = imagineStory(describeData(info),info.url);
     const data = {
       info,
       story
@@ -87,20 +87,16 @@ function validateCall(user_limit, user_breed, want_breed) {
 
 // Return relevant fields a cat in api response for text part of prompt
 function describeData(data) {
-  const animal = data.breeds[0];
-  const formatted = `
+  const animal = data[0].breeds[0];
+  return `
   Breed: ${animal.name}
   Description: ${animal.description}
   Personality: ${animal.temperament}
   National Origin: ${animal.origin}
-  Weight (kgs): ${animal.weight.metric}
-  `;
-  console.log(`! formatted: ${formatted}`);
-  return formatted;
+  Weight (kgs): ${animal.weight.metric}`;
 }
 async function imageToBase64(hyperlink) {
   let img = await axios.get(hyperlink,{responseType:'arraybuffer'});
-  console.log('!recieved image.');
   return Buffer.from(img.data).toString('base64');
 }
 function fileEncode(hyperlink, mimeType) {
@@ -115,12 +111,13 @@ function fileEncode(hyperlink, mimeType) {
 async function imagineStory(formattedText, image_url) {
   try {
     const prompt = `You are a story weaver for a web visitor on a cat facts website who creates paragraph length quirky short stories based on content in the image and any relevant background information on the cat in question. Here is the information can draw from: ${formattedText}. Make your story imaginative, around 1 paragraph, and incorporate anything unique in the image or previous descriptoin you recieved.`;
-    const imageData = fileEncode(image_url,"image/png")
-    const story = await model.generateContent([prompt, imageData]);
-    console.log(`!final story: ${story}`);
-    return story;
+    // const imageData = await fileEncode(image_url,"image/jpeg");
+    // TODO: allow sending of image types.
+    const story = await gemini.generateContent(prompt);
+    return story.response.text();
   }
   catch (error) {
+    console.log("Google GenAI error: ", error);
     return "Couldn't generate story.";
   }
 }

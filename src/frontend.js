@@ -124,7 +124,7 @@ function renderOneCat(data) {
 // Sends a request to server based on specified breed and amount of images wanted
 function getInfo(limit, breed) { 
     // Determine if page should be rendered as one breed or has a mix
-    const isOneBreed = limit != "any";
+    const isOneBreed = limit == "any";
     fetch(`http://localhost:${PORT}/get-images?limit=${limit}&breed_ids=${breed}&has_breeds=1`)
         .then(response => response.json())
         .then(data => {
