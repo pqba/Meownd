@@ -16,7 +16,9 @@ const API_KEY = process.env.CAT_API;
 
 app.use(cors()); // Use CORS middleware, '*' for now
 
-/* DOCS: https://developers.thecatapi.com/view-account/API_KEY (without live_) */
+/* CAT API Docs: https://developers.thecatapi.com/view-account/API_KEY 
+   Gemini Docs: https://ai.google.dev/gemini-api/docs/quickstart?lang=node
+*/
 
 // Request from this route 
 app.get('/get-images', async (req, res) => {
@@ -39,15 +41,16 @@ app.get('/get-images', async (req, res) => {
     const apiUrl = `https://api.thecatapi.com/v1/images/search?api_key=${API_KEY}&limit=${limit}&breed_ids=${breed}&has_breeds=${has_breeds}`
 
     // Get API response, form generative story.
-    const response = await axios.get(apiUrl);
+    const { response } = await axios.get(apiUrl);
+    if(!response) {
+      throw new Error('Empty response from Cat API');
+    }
     const info = response.data;
-    // TODO: const story = imagineStory(formatCatAPI(data),data["url"]);
-    const story = "Lorem ipsum";
 
+   const story = imagineStory(describeData(info),info.url);
     const data = {
       info,
       story
-
     }
     res.json(data); // Send to client
   } catch (error) {
@@ -82,21 +85,39 @@ function validateCall(user_limit, user_breed, want_breed) {
   return (digitRegex.test(user_limit) && typeof user_breed == "string") && (user_limit > 0 && user_limit <= 100) && (want_breed == 1 || want_breed == 0) && (universal_values.breed_list.includes(user_breed));
 }
 
-// Take relevant fields from api response to form the text part of gemini prompt
-function formatCatAPI(resp_json) {
-  return "";
+// Return relevant fields a cat in api response for text part of prompt
+function describeData(data) {
+  const animal = data.breeds[0];
+  const formatted = `
+  Breed: ${animal.name}
+  Description: ${animal.description}
+  Personality: ${animal.temperament}
+  National Origin: ${animal.origin}
+  Weight (kgs): ${animal.weight.metric}
+  `;
+  console.log(`! formatted: ${formatted}`);
+  return formatted;
+}
+async function imageToBase64(hyperlink) {
+  let img = await axios.get(hyperlink,{responseType:'arraybuffer'});
+  console.log('!recieved image.');
+  return Buffer.from(img.data).toString('base64');
+}
+function fileEncode(hyperlink, mimeType) {
+  return {
+    inlineData: {
+      data: imageToBase64(hyperlink),
+      mimeType,
+    },
+  };
 }
 
 async function imagineStory(formattedText, image_url) {
   try {
-    const prompt = `Generate a paragraph length story based on: ${formattedText}`;
-    const image = {
-      inlineData: {
-        // image buffer base64 from link? http request?
-        mimeType: 'image/png',
-      },
-    }
-    const story = await model.generateContent([prompt, image]);
+    const prompt = `You are a story weaver for a web visitor on a cat facts website who creates paragraph length quirky short stories based on content in the image and any relevant background information on the cat in question. Here is the information can draw from: ${formattedText}. Make your story imaginative, around 1 paragraph, and incorporate anything unique in the image or previous descriptoin you recieved.`;
+    const imageData = fileEncode(image_url,"image/png")
+    const story = await model.generateContent([prompt, imageData]);
+    console.log(`!final story: ${story}`);
     return story;
   }
   catch (error) {
